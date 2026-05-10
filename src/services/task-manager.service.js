@@ -12,7 +12,7 @@ const addTask = (record) => {
     taskRecords.push(record);
 }
 
-const updatedTask = (newRecord, id) => {
+const updateTaskById = (newRecord, id) => {
     let task = taskRecords.find((task) => task.id === id);
     if (task) {
         task.title = newRecord.title;
@@ -41,4 +41,13 @@ const deleteTaskById = (id) => {
         deletedRecord = taskRecords.splice(index, 1);
     }
     return deletedRecord
+}
+
+module.exports = {
+    fetchTasks,
+    fetchTaskById,
+    addTask,
+    updateTaskById,
+    patchTaskById,
+    deleteTaskById
 }

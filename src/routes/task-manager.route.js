@@ -1,4 +1,5 @@
-const {Router} = require('express')
+const { Router } = require('express');
+const { handleFetchTasks, handleFetchTaskById, handleAddTasks, handleUpdateTaskById, handlePatchTaskById, handleDeleteTaskById } = require('../controller/task-manager.controller');
 const router = Router();
 
 router.get('/tasks', handleFetchTasks);
