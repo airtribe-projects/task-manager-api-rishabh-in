@@ -16,6 +16,16 @@ const validateAddOrUpdateTask = (req, res, next) => {
     next();
 }
 
+const validateId = (req, res, next) => {
+    const {id} = Number(req.params.id)
+    if(isNaN(id)) {
+        return res.status(404).json({
+            error: "Invalid id"
+        })
+    }
+    next()
+}
+
 module.exports = {
     validateAddOrUpdateTask
 }

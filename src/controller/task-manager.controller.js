@@ -57,20 +57,6 @@ const handleUpdateTaskById = (req, res, next) => {
     }
 };
 
-const handlePatchTaskById = (req, res, next) => {
-    try {
-        const id = Number(req.params.id);
-
-        const patchTask = req.body;
-
-        const task = patchTaskById(patchTask, id);
-
-        return res.status(200).json(task);
-
-    } catch (error) {
-        next(error);
-    }
-};
 
 const handleDeleteTaskById = (req, res, next) => {
     try {
@@ -78,7 +64,7 @@ const handleDeleteTaskById = (req, res, next) => {
 
         const deletedTask = deleteTaskById(id);
 
-        return res.status(200).json(deletedTask);
+        return res.status(204).json(deletedTask);
 
     } catch (error) {
         next(error);
@@ -90,6 +76,5 @@ module.exports = {
     handleFetchTaskById,
     handleAddTasks,
     handleUpdateTaskById,
-    handlePatchTaskById,
     handleDeleteTaskById
 };
