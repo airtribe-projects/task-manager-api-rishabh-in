@@ -1,47 +1,81 @@
-const taskRecords = [];
+const { tasks } = require("../../task.json");
+
+const taskRecords = tasks.map(task => ({ ...task }));
+let nextId = Math.max(...taskRecords.map(task => task.id), 0) + 1;
 
 const fetchTasks = () => {
     return taskRecords;
-}
+};
 
 const fetchTaskById = (id) => {
-    return taskRecords.find((task) => task.id === id);
-}
+    const task = taskRecords.find(task => task.id === id);
+
+    if (!task) {
+        const error = new Error("Task not found");
+        error.statusCode = 404;
+
+        throw error;
+    }
+
+    return task;
+};
 
 const addTask = (record) => {
-    taskRecords.push(record);
-}
+    const newRecord = { id: nextId, ...record };
+    taskRecords.push(newRecord);
+    nextId++;
+
+    return newRecord;
+};
 
 const updateTaskById = (newRecord, id) => {
-    let task = taskRecords.find((task) => task.id === id);
-    if (task) {
-        task.title = newRecord.title;
-        task.description = newRecord.description;
-        task.completed = newRecord.completed
+    const task = taskRecords.find(task => task.id === id);
 
-        //or
-        // Object.assign(task, newRecord)
+    if (!task) {
+        const error = new Error("Task not found");
+        error.statusCode = 404;
+
+        throw error;
     }
-    return task
-}
+
+    task.title = newRecord.title;
+    task.description = newRecord.description;
+    task.completed = newRecord.completed;
+
+    return task;
+};
 
 const patchTaskById = (newProps, id) => {
-    let task = taskRecords.find((task) => task.id === id);
-    if (task) {
-        Object.assign(task, ...newProps)
-    }
-    return task
-}
+    const task = taskRecords.find(task => task.id === id);
 
+    if (!task) {
+        const error = new Error("Task not found");
+        error.statusCode = 404;
+
+        throw error;
+    }
+
+    Object.assign(task, newProps);
+
+    return task;
+};
 
 const deleteTaskById = (id) => {
-    const index = taskRecords.findIndex((task) => task.id === id);
-    let deletedRecord;
-    if(index) {
-        deletedRecord = taskRecords.splice(index, 1);
+    const index = taskRecords.findIndex(
+        task => task.id === id
+    );
+
+    if (index === -1) {
+        const error = new Error("Task not found");
+        error.statusCode = 404;
+
+        throw error;
     }
-    return deletedRecord
-}
+
+    const deletedRecord = taskRecords.splice(index, 1);
+
+    return deletedRecord[0];
+};
 
 module.exports = {
     fetchTasks,
@@ -50,4 +84,4 @@ module.exports = {
     updateTaskById,
     patchTaskById,
     deleteTaskById
-}
+};

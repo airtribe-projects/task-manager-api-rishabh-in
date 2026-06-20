@@ -1,33 +1,89 @@
-const { fetchTasks, fetchTaskById, addTask, updateTaskById, patchTaskById, deleteTaskById } = require("../services/task-manager.service");
+const {
+    fetchTasks,
+    fetchTaskById,
+    addTask,
+    updateTaskById,
+    patchTaskById,
+    deleteTaskById
+} = require("../services/task-manager.service");
 
-const handleFetchTasks = (req, res) => {
-    return res.send(fetchTasks())
-}
+const handleFetchTasks = (req, res, next) => {
+    try {
+        const tasks = fetchTasks();
 
-const handleFetchTaskById = (req, res) => {
-    const {id} = req?.params;
-    return res.send(fetchTaskById(id));
-}
+        return res.status(200).json(tasks);
 
-const handleAddTasks = (req, res) => {
-    const task = req.body;
-    return res.send(addTask(task));
-}
+    } catch (error) {
+        next(error);
+    }
+};
 
-const handleUpdateTaskById = (req, res) => {
-    const {updatedTask, id} = req.body;
-    return res.send(updateTaskById(updatedTask));
-}
+const handleFetchTaskById = (req, res, next) => {
+    try {
+        const id = Number(req.params.id);
 
-const handlePatchTaskById = (req, res) => {
-    const {patchTask, id} = req.body;
-    return res.send(patchTaskById(patchTask))
-}
+        const task = fetchTaskById(id);
 
-const handleDeleteTaskById = (req, res) => {
-    const {id} = req.params
-    return res.send(deleteTaskById(id))
-}
+        return res.status(200).json(task);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+const handleAddTasks = (req, res, next) => {
+    try {
+        const newTask = req.body;
+        const task = addTask(newTask);
+        return res.status(201).json(task);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+const handleUpdateTaskById = (req, res, next) => {
+    try {
+        const id = Number(req.params.id);
+
+        const updatedTask = req.body;
+
+        const task = updateTaskById(updatedTask, id);
+
+        return res.status(200).json(task);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+const handlePatchTaskById = (req, res, next) => {
+    try {
+        const id = Number(req.params.id);
+
+        const patchTask = req.body;
+
+        const task = patchTaskById(patchTask, id);
+
+        return res.status(200).json(task);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+const handleDeleteTaskById = (req, res, next) => {
+    try {
+        const id = Number(req.params.id);
+
+        const deletedTask = deleteTaskById(id);
+
+        return res.status(200).json(deletedTask);
+
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
     handleFetchTasks,
@@ -36,4 +92,4 @@ module.exports = {
     handleUpdateTaskById,
     handlePatchTaskById,
     handleDeleteTaskById
-}
+};
